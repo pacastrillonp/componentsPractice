@@ -10,6 +10,9 @@ class _InputPageState extends State<InputPage> {
   String _email = '';
   String _lock = '';
   String _date = '';
+  String _selectedOption = 'Fly';
+
+  List<String> _powers = ['Fly', 'X-Ray', 'Super Breath', 'Strong'];
 
   TextEditingController _textEditingController = TextEditingController();
 
@@ -29,6 +32,8 @@ class _InputPageState extends State<InputPage> {
           _createPassword(),
           Divider(),
           _createDate(context),
+          Divider(),
+          _createDropDown(),
           Divider(),
           _createPerson()
         ],
@@ -101,10 +106,31 @@ class _InputPageState extends State<InputPage> {
     );
   }
 
-  Widget _createPerson() {
-    return ListTile(
-      title: Text('Name: $_name'),
-      subtitle: Text('Email: $_email'),
+  List<DropdownMenuItem<String>> getDropdownOptions() {
+    List<DropdownMenuItem<String>> list = [];
+    _powers.forEach((power) {
+      list.add(DropdownMenuItem(child: Text(power), value: power));
+    });
+    return list;
+  }
+
+  Widget _createDropDown() {
+    return Row(
+      children: [
+        Icon(Icons.select_all),
+        SizedBox(width: 30.0,),
+        Expanded(
+          child: DropdownButton(
+            value: _selectedOption,
+            items: getDropdownOptions(),
+            onChanged: (option) {
+              setState(() {
+                _selectedOption = option.toString();
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -122,4 +148,13 @@ class _InputPageState extends State<InputPage> {
       });
     }
   }
+
+  Widget _createPerson() {
+    return ListTile(
+      title: Text('Name: $_name'),
+      subtitle: Text('Email: $_email'),
+      trailing: Text('Super Power: $_selectedOption'),
+    );
+  }
+
 }
